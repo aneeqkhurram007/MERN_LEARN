@@ -1,0 +1,13 @@
+{
+  "name": "mern-learn",
+  "version": "1.0.0",
+  "main": "server/index.js",
+  "repository": "https://github.com/aneeqkhurram007/MERN_LEARN.git",
+  "author": "Aneeq Khurram <aneeqkhurram007@yahoo.com>",
+  "license": "MIT",
+  "scripts": {
+    "client": "cd client && yarn start",
+    "server": "cd server && yarn start",
+    "start": "concurrently -n server,client -c red,green \"yarn server\" \"yarn client\""
+  }
+}
