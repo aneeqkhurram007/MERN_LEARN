@@ -60,7 +60,6 @@ routes.post("/login", async (req, res) => {
     const isPasswordMatched = await bcrypt.compare(password, user.password);
     if (isPasswordMatched) {
       const token = await user.generateAuthToken();
-      console.log(token);
       res.cookie("token", token, {
         expires: new Date(Date.now() + 3600 * 1000),
         httpOnly: true,

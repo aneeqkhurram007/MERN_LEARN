@@ -1,8 +1,13 @@
+import Navbar from "./components/common/Navbar";
+import { useRoutes } from "react-router-dom";
+import pageRoutes from "./routes/PageRoutes";
 function App() {
+  const routes = useRoutes(pageRoutes);
   return (
-    <div>
-      <h1 className="text-red-600 text-6xl">App</h1>
-    </div>
+    <>
+      <Navbar />
+      {routes}
+    </>
   );
 }
 

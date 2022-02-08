@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .navBtn {
+    @apply scale-105 transition-all text-cyan-400 underline underline-offset-4;
+  }
+  .formBtn {
+    @apply font-semibold transition-all bg-cyan-400 border
+    border-white text-white;
+  }
+}
+body {
+  background-color: rgb(252, 252, 252);
+}
