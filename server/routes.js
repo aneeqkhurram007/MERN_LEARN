@@ -13,6 +13,7 @@ routes.get("/", (req, res) => {
   res.send("Hello from Home");
 });
 routes.get("/about", middlware, (req, res) => {
+  res.cookie("name", "John");
   res.send("Hello from About");
 });
 routes.get("/contact", (req, res) => {
@@ -60,6 +61,10 @@ routes.post("/login", async (req, res) => {
     if (isPasswordMatched) {
       const token = await user.generateAuthToken();
       console.log(token);
+      res.cookie("token", token, {
+        expires: new Date(Date.now() + 3600 * 1000),
+        httpOnly: true,
+      });
       res.status(201).json({ message: "User logged in successfully" });
     } else {
       res.status(404).json({ error: "Invalid credentials" });
