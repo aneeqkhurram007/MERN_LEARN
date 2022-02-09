@@ -5,26 +5,49 @@ import {
   faMobileAlt,
   faPencilAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FormItem from "../components/common/FormItem";
 const SignUp = () => {
+  const navigate = useNavigate();
   const [state, setstate] = useState({
     email: "",
     name: "",
     phone: "",
     password: "",
-    cpassword: "",
+    rpassword: "",
     work: "",
   });
-  const { email, name, phone, password, cpassword, work } = state;
+  const { email, name, phone, password, rpassword, work } = state;
   const handler = (e) => {
     setstate({ ...state, [e.target.name]: e.target.value });
+  };
+  const submitData = async (e) => {
+    e.preventDefault();
+    const response = await fetch("/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(state),
+    });
+    const data = await response.json();
+    console.log(data);
+    if (data.error) {
+      alert(data.error);
+    } else {
+      alert(data.message);
+      navigate("/login", {
+        replace: true,
+        state: "Signed up successfully. You can login now",
+      });
+    }
   };
   return (
     <div className="flex flex-col min-h-screen p-10 space-y-10 justify-center text-center">
       <h1 className="text-4xl font-sans">Let's Register you</h1>
       <div className="flex justify-center">
         <form
+          onSubmit={submitData}
           className="flex flex-col space-y-6 w-1/2 p-10 bg-white rounded-lg shadow-lg"
           autoComplete="off"
         >
@@ -71,9 +94,9 @@ const SignUp = () => {
           <FormItem
             icon={faKey}
             type="password"
-            name="cpassword"
+            name="rpassword"
             changeHandler={handler}
-            value={cpassword}
+            value={rpassword}
             placeholder="Confirm Password"
           />
           <div className="flex justify-evenly">

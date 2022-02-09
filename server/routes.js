@@ -1,19 +1,14 @@
 import express from "express";
 import User from "./models/userSchema.js";
 import bcrypt from "bcryptjs";
+import authenticate from "./middleware/authenticate.js";
 
 const routes = express.Router();
-
-// Middleware
-const middlware = (req, res, next) => {
-  next();
-};
 
 routes.get("/", (req, res) => {
   res.send("Hello from Home");
 });
-routes.get("/about", middlware, (req, res) => {
-  res.cookie("name", "John");
+routes.get("/about", authenticate, (req, res) => {
   res.send("Hello from About");
 });
 routes.get("/contact", (req, res) => {
@@ -48,7 +43,7 @@ routes.post("/register", async (req, res) => {
   }
 });
 // Login Route
-routes.post("/login", async (req, res) => {
+routes.post("/signin", async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
     return res.status(422).json({ error: "Please fill all the fields" });
