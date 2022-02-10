@@ -1,6 +1,6 @@
 import { faEnvelope, faUser } from "@fortawesome/free-regular-svg-icons";
 import { faHouseLaptop, faMobileAlt } from "@fortawesome/free-solid-svg-icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FormItem from "../components/common/FormItem";
 import { ContactItems } from "../components/contact/ContactItems";
 
@@ -15,6 +15,49 @@ const Contact = () => {
   const handleChange = (e) => {
     setstate({ ...state, [e.target.name]: e.target.value });
   };
+  const getData = async () => {
+    try {
+      const response = await fetch("/getData", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      setstate({
+        ...state,
+        email: data.email,
+        phone: data.phone,
+        name: data.name,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => getData(), []);
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(state),
+      });
+      const data = await response.json();
+      console.log(data);
+      if (data.error) throw new Error(data.error);
+      alert(data.message);
+      setstate({ ...state, message: "" });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="flex flex-col py-10 min-h-screen">
       <div className="flex justify-center p-4">
@@ -37,7 +80,11 @@ const Contact = () => {
       <div className="p-10 flex justify-center">
         <div className="shadow-lg bg-white rounded-lg p-4 text-center">
           <h1 className="text-4xl font-sans py-4">Get in Touch</h1>
-          <form autoComplete="off" className="grid grid-cols-3 my-5">
+          <form
+            autoComplete="off"
+            onSubmit={submitHandler}
+            className="grid grid-cols-3 my-5"
+          >
             <FormItem
               name={"name"}
               type="text"

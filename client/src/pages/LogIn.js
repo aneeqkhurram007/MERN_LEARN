@@ -7,7 +7,6 @@ import FormItem from "../components/common/FormItem";
 const LogIn = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location, navigate);
   const [state, setstate] = useState({
     email: "",
     password: "",
@@ -18,7 +17,7 @@ const LogIn = () => {
   };
   const submitData = async (e) => {
     e.preventDefault();
-    const response = await fetch("/signin", {
+    const response = await fetch("/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

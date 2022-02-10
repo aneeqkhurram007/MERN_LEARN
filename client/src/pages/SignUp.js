@@ -23,7 +23,7 @@ const SignUp = () => {
   };
   const submitData = async (e) => {
     e.preventDefault();
-    const response = await fetch("/register", {
+    const response = await fetch("/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

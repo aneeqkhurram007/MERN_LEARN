@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 const app = express();
 dotenv.config({
   path: "./.env",
@@ -7,6 +8,7 @@ dotenv.config({
 
 const port = process.env.PORT;
 app.use(express.json());
+app.use(cookieParser());
 // Mongo DB Connection
 import DB from "./db/connection.js";
 DB();

@@ -9,16 +9,31 @@ routes.get("/", (req, res) => {
   res.send("Hello from Home");
 });
 routes.get("/about", authenticate, (req, res) => {
-  res.send("Hello from About");
+  res.send(req.rootUser);
 });
-routes.get("/contact", (req, res) => {
-  res.send("Hello from Contact");
+routes.post("/contact", authenticate, async (req, res) => {
+  try {
+    const { name, email, phone, message } = req.body;
+    if (!name || !email || !phone || !message)
+      throw new Error("Please fill all the fields");
+    const userContact = await User.findOne({ _id: req.userId });
+    if (!userContact) throw new Error("User not found");
+    const userMessage = await userContact.addMessage(message);
+    await userContact.save();
+    res.status(200).json({ message: userMessage });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 });
 routes.get("/profile", (req, res) => {
   res.send("Hello from Profile");
 });
+//
+routes.get("/getData", authenticate, (req, res) => {
+  res.send(req.rootUser);
+});
 // Registeration Route
-routes.post("/register", async (req, res) => {
+routes.post("/signup", async (req, res) => {
   const { name, email, phone, password, rpassword, work } = req.body;
   if (!name || !email || !phone || !password || !rpassword || !work) {
     return res.status(422).json({ error: "Please fill all the fields" });
@@ -43,7 +58,7 @@ routes.post("/register", async (req, res) => {
   }
 });
 // Login Route
-routes.post("/signin", async (req, res) => {
+routes.post("/login", async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
     return res.status(422).json({ error: "Please fill all the fields" });

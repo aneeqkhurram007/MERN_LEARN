@@ -26,6 +26,17 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  messages: [
+    {
+      message: {
+        type: String,
+      },
+      date: {
+        type: Date,
+        default: Date.now(),
+      },
+    },
+  ],
   tokens: [
     {
       token: {
@@ -47,6 +58,17 @@ userSchema.methods.generateAuthToken = async function () {
   this.tokens = this.tokens.concat({ token });
   await this.save();
   return token;
+};
+userSchema.methods.addMessage = async function (message) {
+  try {
+    this.messages = this.messages.concat({
+      message,
+    });
+    await this.save();
+    return "Message added successfully";
+  } catch (error) {
+    console.log(error);
+  }
 };
 const User = mongoose.model("User", userSchema);
 export default User;
